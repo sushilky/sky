@@ -1,4 +1,7 @@
 # Compiled Object files
+a.out
+
+# Compiled Object files
 *.slo
 *.lo
 *.o
