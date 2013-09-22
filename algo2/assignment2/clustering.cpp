@@ -74,14 +74,20 @@ class Graph {
   void Kruskal(){
     sort(edges.begin(),edges.end(),f_cmp_edge_cost);
     vector<Edge> mst;
+    int max_dist = 0;
 
     for (vector<Edge>::const_iterator e = edges.begin(); e != edges.end(); ++e) {
       if(uf.Find(e->u) != uf.Find(e->v)){
+        if(mst.size() == V-4) {
+          max_dist = e->w;
+          break;
+        }
         mst.push_back(*e);
         uf.Union(uf.Find(e->u),uf.Find(e->v));
       }
     }
 
+    cout << "MST Size = " << mst.size() << "Max Dist = " << max_dist << endl;
     for (vector<Edge>::const_iterator e = mst.begin(); e != mst.end(); ++e) {
       cout << "(" << e->u << "," << e->v << "," << e->w << ") ";
     }
