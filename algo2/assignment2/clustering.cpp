@@ -5,29 +5,50 @@
 
 using namespace std;
 
-//Simple Union Find Data Structure
+//Union By Rank UnionFind Data Structure
 class UnionFind{
-  vector<int> grp;
+  vector<int> parent;
+  vector<int> rank;
 
   public:
-  UnionFind(int size):grp(size+1) {
-    for (int i = 0; i < grp.size(); i++) {
-      grp[i] = i;
+  UnionFind(int size):parent(size+1),rank(size+1) {
+    for (int i = 0; i < parent.size(); i++) {
+      parent[i] = i;
+      rank[i] = 0;
     }
   }
 
-  //O(1)
+  //Path Compression
   int Find(int i){
-    return grp[i];
+    int root;
+    int base = i;
+    while( i != parent[i]){
+      i = parent[i];
+    }
+    root = i;
+
+    while (parent[base] != root){
+      i = parent[base];
+      parent[base] = root;
+      base = i;
+    }
+    return root;
   }
 
-  // All a ==> b
+  // All Node a, Node b
   // O(n)
   void Union(int a, int b){
-    for (vector<int>::iterator it = grp.begin(); it != grp.end(); ++it) {
-      if(*it == a){
-        *it = b;
-      }
+    int s1 = Find(a);
+    int s2 = Find(b);
+    if(rank[s1] > rank[s2]){
+      parent[s2] = s1;
+    }
+    else if(rank[s2] > rank[s1]){
+      parent[s1] = s2;
+    }
+    else {
+      parent[s1] = s2;
+      rank[s2] += 1;
     }
   }
 };
@@ -83,7 +104,7 @@ class Graph {
           break;
         }
         mst.push_back(*e);
-        uf.Union(uf.Find(e->u),uf.Find(e->v));
+        uf.Union(e->u,e->v);
       }
     }
 
